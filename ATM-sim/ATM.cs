@@ -10,15 +10,15 @@ namespace ATM_sim
     public class ATM
     {
         private ATM_Form form;
-        private Account[] accounts;
+        private Server server;
         private int page = 0;
         private int curr = -1;
         private ATM_Dialog dialog;
 
-        public ATM(ATM_Form form, Account[] accounts)
+        public ATM(ATM_Form form, Server server)
         {
             this.form = form;
-            this.accounts = accounts;
+            this.server = server;
             this.renderPage();
         }
 
@@ -57,9 +57,18 @@ namespace ATM_sim
                         this.outputCash(10);
                         break;
                     case 1:
-                        this.outputCash(50);
+                        this.outputCash(20);
                         break;
                     case 2:
+                        this.outputCash(50);
+                        break;
+                    case 3:
+                        this.outputCash(100);
+                        break;
+                    case 4:
+                        this.outputCash(200);
+                        break;
+                    case 5:
                         this.outputCash(500);
                         break;
                 }
@@ -78,8 +87,15 @@ namespace ATM_sim
 
         private void outputCash(int amount)
         {
-            bool res = this.accounts[this.curr].decrementBalance(amount);
-            this.page = 2;
+            if (this.server.getBalance(this.curr) > amount) {
+                this.server.setBalance(this.curr, this.server.getBalance(this.curr) - amount);
+                MessageBox.Show(amount.ToString() + " was withdrawn", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Insufficient Funds", "Failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            this.page = 0;
             this.renderPage();
         }
 
@@ -90,7 +106,7 @@ namespace ATM_sim
                 this.form.label4.Text = "No Account Selected";
             } else
             {
-                this.form.label4.Text = "Account: " + this.accounts[this.curr].getAccountNum().ToString();
+                this.form.label4.Text = "Account: " + this.curr.ToString();
             }
 
             if (this.page == 0)
@@ -98,16 +114,25 @@ namespace ATM_sim
                 this.form.label1.Text = "Take Out Cash";
                 this.form.label2.Text = "View Balance";
                 this.form.label3.Text = "Exit";
+                this.form.label5.Text = "";
+                this.form.label6.Text = "";
+                this.form.label7.Text = "";
             } else if (this.page == 1)
             {
                 this.form.label1.Text = "10";
-                this.form.label2.Text = "50";
-                this.form.label3.Text = "500";
+                this.form.label2.Text = "20";
+                this.form.label3.Text = "50";
+                this.form.label5.Text = "100";
+                this.form.label6.Text = "200";
+                this.form.label7.Text = "500";
             } else if (this.page == 2)
             {
-                this.form.label1.Text = "Balance: " + this.accounts[this.curr].getBalance().ToString();
+                this.form.label1.Text = "Balance: " + this.server.getBalance(this.curr).ToString();
                 this.form.label2.Text = "";
                 this.form.label3.Text = "Menu";
+                this.form.label5.Text = "";
+                this.form.label6.Text = "";
+                this.form.label7.Text = "";
             }
         }
 
@@ -134,8 +159,8 @@ namespace ATM_sim
                 }
                 return false;
             }
-            int index = findAccount(number);
-            if (index == -1)
+            
+            if (!this.server.checkPin(number, pin))
             {
                 var res = this.invalidCredentials();
                 if (res == DialogResult.OK)
@@ -144,30 +169,9 @@ namespace ATM_sim
                 }
                 return false;
             }
-
-            if (!this.accounts[index].checkPin(pin))
-            {
-                var res = this.invalidCredentials();
-                if (res == DialogResult.OK)
-                {
-                    this.dialog.reset();
-                }
-                return false;
-            }
-            this.curr = index;
+            this.curr = number;
             this.renderPage();
             return true;
-        }
-
-        private int findAccount(int number)
-        {
-            int index = -1;
-            for (int i=0; i<this.accounts.Length; i++)
-            {
-                if (this.accounts[i].getAccountNum() == number) { index = i; }
-            }
-
-            return index;
         }
     }
 }

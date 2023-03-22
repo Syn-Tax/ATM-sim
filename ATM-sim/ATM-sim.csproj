@@ -59,6 +59,7 @@
     <Compile Include="ATM_Server.Designer.cs">
       <DependentUpon>ATM_Server.cs</DependentUpon>
     </Compile>
+    <Compile Include="Server.cs" />
     <Compile Include="SampleClasses.cs" />
     <Compile Include="ATM_Form.cs">
       <SubType>Form</SubType>
@@ -73,6 +74,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ATM_Dialog.resx">
       <DependentUpon>ATM_Dialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ATM_Server.resx">
+      <DependentUpon>ATM_Server.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
