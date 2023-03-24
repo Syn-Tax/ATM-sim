@@ -148,6 +148,9 @@ namespace ATM_sim
             return res;
         }
 
+        
+
+
         public bool submitAccount(int number, int pin)
         {
             if (number < 0 || number > 999999 || pin < 0 || pin > 9999)
@@ -155,23 +158,30 @@ namespace ATM_sim
                 var res = this.invalidCredentials();
                 if (res == DialogResult.OK)
                 {
-                    this.dialog.reset();
+                    //this.dialog.reset(); throws exception
+                    return true;
                 }
                 return false;
             }
-            
+
             if (!this.server.checkPin(number, pin))
             {
                 var res = this.invalidCredentials();
                 if (res == DialogResult.OK)
                 {
-                    this.dialog.reset();
+                    this.dialog.reset(); 
                 }
                 return false;
             }
+
+            // Login successful, open ATM_Form
+            ATM_Form atmForm = new ATM_Form(this.server);
+            atmForm.ShowDialog();
             this.curr = number;
             this.renderPage();
             return true;
         }
+
+
     }
 }

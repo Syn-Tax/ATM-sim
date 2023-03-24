@@ -57,5 +57,10 @@ namespace ATM_sim
         {
             atm.optionClicked(5);
         }
+
+        private void ATM_Form_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

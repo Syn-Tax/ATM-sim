@@ -192,6 +192,7 @@
             this.Controls.Add(this.button1);
             this.Name = "ATM_Form";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.ATM_Form_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
